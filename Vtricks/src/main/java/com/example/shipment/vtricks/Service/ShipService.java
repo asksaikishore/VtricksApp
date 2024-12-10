@@ -7,9 +7,9 @@ import java.util.List;
 public interface ShipService {
 
 
-    public List<Ship> getAllShipments() throws IOException;
-    public Ship getShipmentsById(Long id);
+     List<Ship> getAllShipments() throws IOException;
+     Ship getShipmentsById(Long id);
 
-    public void CreateShipment(Ship ship);
+     void CreateShipment(Ship ship);
 //    public Ship findByOrderID(int order);
 }
