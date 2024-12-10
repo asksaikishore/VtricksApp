@@ -4,7 +4,6 @@ import com.example.shipment.vtricks.entity.Ship;
 
 import java.io.IOException;
 import java.util.List;
-
 public interface ShipService {
 
 
@@ -12,4 +11,5 @@ public interface ShipService {
     public Ship getShipmentsById(Long id);
 
     public void CreateShipment(Ship ship);
+//    public Ship findByOrderID(int order);
 }
