@@ -44,6 +44,19 @@ public class Ship {
         this.producer_name = producer_name;
     }
 
+    @Override
+    public String toString() {
+        return "Ship{" +
+                "id=" + id +
+                ", Order_ID=" + Order_ID +
+                ", producer_name='" + producer_name + '\'' +
+                ", departure_date=" + departure_date +
+                ", arrival_date=" + arrival_date +
+                ", Ship_name='" + Ship_name + '\'' +
+                ", Bulk_count=" + Bulk_count +
+                '}';
+    }
+
     public Date getDeparture_date() {
         return departure_date;
     }
