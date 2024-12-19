@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @Configuration
-@ComponentScan(basePackages = {"com.example.shipment.vtricks"})
+@ComponentScan(basePackages = {"com.example.shipment.*"})
 @EnableAspectJAutoProxy
 public class LoggerConf {
 
