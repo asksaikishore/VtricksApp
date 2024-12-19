@@ -1,49 +1,39 @@
 package com.example.shipment.vtricks.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.*;
 
-import java.lang.annotation.Documented;
-import java.time.LocalDate;
+
+import org.springframework.data.annotation.Id;
+
 import java.util.Date;
 
-@Entity
-@Builder
-@AllArgsConstructor
-@RequiredArgsConstructor
 public class Run_Value {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long run_Id;
+    private String runId;
     private int Order_ID;
     private String producer_name;
     private Date departure_date;
     private Date arrival_date;
     private String Ship_name;
 
+
     @Override
     public String toString() {
-
         return "Run_Value{" +
-                "run_Id=" + run_Id +
-                " AND Order_ID=" + Order_ID +
-                " AND producer_name='" + producer_name + '\'' +
-                " AND departure_date=" + departure_date +
-                " AND arrival_date=" + arrival_date +
-                " AND Ship_name='" + Ship_name + '\'' +
+                "runId='" + runId + '\'' +
+                ", Order_ID=" + Order_ID +
+                ", producer_name='" + producer_name + '\'' +
+                ", departure_date=" + departure_date +
+                ", arrival_date=" + arrival_date +
+                ", Ship_name='" + Ship_name + '\'' +
                 '}';
     }
 
-    public Long getRun_Id() {
-        return run_Id;
+    public String getRunId() {
+        return runId;
     }
 
-    public Run_Value setRun_Id(Long run_Id) {
-        this.run_Id = run_Id;
+    public Run_Value setRunId(String runId) {
+        this.runId = runId;
         return this;
     }
 

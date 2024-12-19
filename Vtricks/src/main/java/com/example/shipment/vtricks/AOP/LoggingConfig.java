@@ -18,15 +18,15 @@ import java.util.List;
 public class LoggingConfig {
 
     Logger log= LoggerFactory.getLogger("LoggingConfig.class");
-    @Before("execution(* com.example.shipment.vtricks.controller.ShipmentController.*(..))")
-    public void before(JoinPoint joinPoint){
-        System.out.println("Before Aspect called");
-        log.info("Before Aspect called");
-        log.info(joinPoint.getSignature().getName());
-        log.info(Arrays.toString(joinPoint.getArgs()));
-        log.info("Before return "+ joinPoint.getThis().toString());
-
-    }
+//    @Before("execution(* com.example.shipment.vtricks.controller.ShipmentController.*(..))")
+//    public void before(JoinPoint joinPoint){
+//        System.out.println("Before Aspect called");
+//        log.info("Before Aspect called");
+//        log.info(joinPoint.getSignature().getName());
+//        log.info(Arrays.toString(joinPoint.getArgs()));
+//        log.info("Before return "+ joinPoint.getThis().toString());
+//
+//    }
     @After("execution(* com.example.shipment.vtricks.controller.ShipmentController.*(..))")
     public void after(JoinPoint joinPoint){
         System.out.println("After Aspect invoked");

@@ -58,8 +58,10 @@ Logger logger= LoggerFactory.getLogger("ShipServiceImpl.class");
         logger.info(result.toString());
         return result;
     }
-    public Run_Value createnewRun(Run_Value run){
-        return runFeign.CreateRun(run);
+    public String createnewRun(Run_Value run){
+        String runner=runFeign.CreateRun(run);
+        System.out.println("ShipService call "+runner);
+        return runner;
     }
     public List<Ship> getShipmentByFilters(String str){
         String qry="select k from Ship k where "+str;
@@ -90,10 +92,12 @@ Logger logger= LoggerFactory.getLogger("ShipServiceImpl.class");
 @Async("Get_Shipments_Bean")
     public void RecurringNewShipment(){
         Ship ship=new Ship();
+    Date cur=new Date();
         int temp=new Random().nextInt(1,100);
-        ship.setShip_name("Titanic "+(temp)+"");
+        ship.setShip_name("Titanic_"+(temp % cur.getSeconds())+"");
+        ship.setProducer_name("Producer_"+(temp % cur.getMinutes()));
         ship.setOrder_ID(temp);
-        Date cur=new Date();
+
 
     ship.setDeparture_date(Calendar.getInstance(TimeZone.getDefault()).getTime());
         ship.setArrival_date(new Date(2025-1900,temp%12,temp%30));

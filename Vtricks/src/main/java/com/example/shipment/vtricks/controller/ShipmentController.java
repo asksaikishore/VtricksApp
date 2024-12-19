@@ -4,6 +4,8 @@ import com.example.shipment.vtricks.Service.ShipServiceImpl;
 import com.example.shipment.vtricks.entity.Run_Value;
 import com.example.shipment.vtricks.entity.Ship;
 
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import lombok.extern.slf4j.Slf4j;
@@ -34,20 +36,25 @@ public class ShipmentController {
     ) throws Exception {
         List<String> input=new ArrayList<>();
         Run_Value run=new Run_Value();
-        run.setOrder_ID(OrderID);
-        run.setProducer_name(producer_name);
-        run.setShip_name(Ship_name);
-        Long newRunId= service.createnewRun(run).getRun_Id();
         if(OrderID!=null){
+            run.setOrder_ID(OrderID);
             input.add("k.Order_ID ="+OrderID);
         }
         if(producer_name!=null){
-            input.add("k.producer_name ="+producer_name);
+            run.setProducer_name(producer_name);
+            input.add("k.producer_name ='"+producer_name+"'");
         }
-        if(Ship_name!=null){
+        if(!Ship_name.isEmpty()){
+            run.setShip_name(Ship_name);
             input.add("k.Ship_name ='"+Ship_name+"'");
         }
+//        if (run) {
+        String newRunId =  service.createnewRun(run);
+//        }
+        run.setRunId(newRunId);
+        System.out.println("new run Id Created is "+run.toString());
         StringBuilder sb=new StringBuilder();
+        System.out.println("input filters ="+input);
         for(int i=0;i<input.size();i++){
             if(i!=0){
                 sb.append(" AND ");
