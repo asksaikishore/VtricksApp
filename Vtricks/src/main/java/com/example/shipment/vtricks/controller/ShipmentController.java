@@ -1,21 +1,12 @@
 package com.example.shipment.vtricks.controller;
-
 import com.example.shipment.vtricks.Service.ShipServiceImpl;
-import com.example.shipment.vtricks.entity.Run_Value;
+import com.example.shipment.vtricks.config.DynamicRunValue;
 import com.example.shipment.vtricks.entity.Ship;
-
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,46 +19,21 @@ public class ShipmentController {
     @Autowired
     ShipServiceImpl service;
 
+    @Autowired
+    DynamicRunValue dyn;
+
     @GetMapping("/all")
     public ResponseEntity<List<Ship>> getAllShipments(
-            @RequestParam(required = false) Integer OrderID,
-            @RequestParam(required = false) String producer_name,
-            @RequestParam(required = false) String Ship_name
+            @RequestParam(value = "OrderID",required = false) Integer OrderID,
+            @RequestParam(value = "producer_name",required = false) String producer_name,
+            @RequestParam(value = "Ship_name",required = false) String Ship_name
     ) throws Exception {
-        List<String> input=new ArrayList<>();
-        Run_Value run=new Run_Value();
-        if(OrderID!=null){
-            run.setOrder_ID(OrderID);
-            input.add("k.Order_ID ="+OrderID);
-        }
-        if(producer_name!=null){
-            run.setProducer_name(producer_name);
-            input.add("k.producer_name ='"+producer_name+"'");
-        }
-        if(!Ship_name.isEmpty()){
-            run.setShip_name(Ship_name);
-            input.add("k.Ship_name ='"+Ship_name+"'");
-        }
-//        if (run) {
-        String newRunId =  service.createnewRun(run);
-//        }
-        run.setRunId(newRunId);
-        System.out.println("new run Id Created is "+run.toString());
-        StringBuilder sb=new StringBuilder();
-        System.out.println("input filters ="+input);
-        for(int i=0;i<input.size();i++){
-            if(i!=0){
-                sb.append(" AND ");
-                sb.append(input.get(i));
+//        String InputQuery=service.getRunById(dyn.getDynamicRunID()).getArgs();
+//        System.out.println("get status by run ID "+InputQuery);
+        System.out.println("Global Run ID created = "+dyn.getDynamicRunID());
+        System.out.println("Global Run Query generated = "+dyn.getDynamicquery());
 
-            }else{
-                sb.append(input.get(i));
-            }
-        }
-        if(sb.isEmpty()){
-            sb.append("k.Id >=0");}
-        System.out.println(sb.toString());
-        List<Ship> result=service.getShipmentByFilters(sb.toString());
+        List<Ship> result=service.getShipmentByFilters(dyn.getDynamicquery());
 
 
 //        List<Ship> result=service.getAllShipments();

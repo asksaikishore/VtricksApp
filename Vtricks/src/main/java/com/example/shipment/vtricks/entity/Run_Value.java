@@ -28,6 +28,34 @@ public class Run_Value {
                 '}';
     }
 
+    public String getArgs(){
+        StringBuilder sb=new StringBuilder();
+        sb.append("1=1");
+        if(runId!=null){
+            sb.append(" AND runId='"+runId+"'");
+        }
+        if(Order_ID!=0){
+            sb.append(" AND Order_ID="+Order_ID);
+        }
+        if(producer_name!=null){
+            sb.append(" AND producer_name='"+producer_name+"'");
+        }
+        if(departure_date!=null){
+            sb.append(" AND departure_date="+departure_date);
+        }
+        if(arrival_date!=null){
+            sb.append(" AND arrival_date="+arrival_date);
+        }
+        if(Ship_name!=null){
+            sb.append(" AND Ship_name='"+Ship_name+"'");
+        }
+return sb.toString();
+
+
+
+
+    }
+
     public String getRunId() {
         return runId;
     }
