@@ -86,6 +86,9 @@ Logger logger= LoggerFactory.getLogger("ShipServiceImpl.class");
         String ss="k.Order_ID = 67";
         return repo.getsample(ss);
     }
+    public Run_Value getRunById(String ID){
+        return runFeign.getRunById(ID);
+    }
 
 
 //    @Scheduled(fixedRate = 6000)

@@ -1,7 +1,9 @@
 package com.example.shipment.vtricks.Repository;
 
 import com.example.shipment.vtricks.entity.Run_Value;
+import feign.QueryMap;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +17,7 @@ public interface Run_Feign {
 
     @GetMapping("/run/{id}")
     Run_Value getRunById(@PathVariable(value = "id") String Id);
+
 
 
 }
