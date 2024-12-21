@@ -2,6 +2,7 @@ package com.example.shipment.vtricks.Service;
 
 import com.example.shipment.vtricks.Repository.Run_Feign;
 import com.example.shipment.vtricks.Repository.ShipRepo;
+import com.example.shipment.vtricks.config.DynamicRunValue;
 import com.example.shipment.vtricks.entity.Run_Value;
 import com.example.shipment.vtricks.entity.Ship;
 import jakarta.persistence.EntityManager;
@@ -17,6 +18,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.Schedules;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.*;
@@ -33,7 +35,8 @@ Logger logger= LoggerFactory.getLogger("ShipServiceImpl.class");
         Run_Feign runFeign;
     @PersistenceContext
     private EntityManager entityManager;
-
+    @Autowired
+    DynamicRunValue dyn;
     @Override
     public Ship getShipmentsById(Long id) {
         Optional<Ship> result=repo.findById(id);
@@ -60,22 +63,28 @@ Logger logger= LoggerFactory.getLogger("ShipServiceImpl.class");
         logger.info(result.toString());
         return result;
     }
+
     public String createnewRun(Run_Value run){
         String runner=runFeign.CreateRun(run);
         System.out.println("ShipService call "+runner);
         return runner;
     }
+    @Transactional
     public List<Ship> getShipmentByFilters(String str) throws Exception {
         String qry="select k from Ship k where "+str;
         System.out.println("Query = "+qry);
         Query query = entityManager.createQuery(qry, Ship.class);
-        Thread.sleep(10000);
+        Thread.sleep(4000);
 //        List<Ship> result=repo.getdata(str);
 //        query.setParameter("ask",str);
 //        System.out.println("query written = "+query);
 //        System.out.println("Service call  "+str);
         List<Ship> result= query.getResultList();
+        updateRunStatus(dyn.getDynamicRunID(),"completed");
+        String testing=createnewRun(new Run_Value().setShip_name("Sai kishore"));
+        Thread.sleep(4000);
         if(result.isEmpty()){
+            rollBackRun(testing);
             throw new Exception("Result is empty");
 
         }
@@ -91,6 +100,9 @@ Logger logger= LoggerFactory.getLogger("ShipServiceImpl.class");
 //            logger.info(e.getLocalizedMessage());
 //        }
         runFeign.UpdateStatus(runId,status);
+    }
+    public void rollBackRun(String runID){
+        runFeign.rollBack(runID);
     }
 
 

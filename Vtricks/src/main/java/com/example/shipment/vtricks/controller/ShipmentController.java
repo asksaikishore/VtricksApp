@@ -39,9 +39,10 @@ public class ShipmentController {
 try {
  result = service.getShipmentByFilters(dyn.getDynamicquery());
 // Thread.sleep(4000);
-    service.updateRunStatus(dyn.getDynamicRunID(),"completed");
+
 }catch(Exception e){
 service.updateRunStatus(dyn.getDynamicRunID(),"Failure");
+
 }
 
 
