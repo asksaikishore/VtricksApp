@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.PropertiesPropertySource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -32,10 +33,10 @@ public class LoggingConfig {
     @Autowired
     ShipServiceImpl service;
 
-    @Before("execution(* com.example.shipment.vtricks.controller.ShipmentController.*(..))")
+    @Before("execution(* com.example.shipment.vtricks.controller.ShipmentController.getAllShipments(..))")
     public void beforeController(JoinPoint joinPoint) {
 
-        System.out.println(joinPoint.getClass());
+//        System.out.println(joinPoint.getClass());
         Run_Value run = new Run_Value();
         Object[] objarr = joinPoint.getArgs();
         if(objarr[0]!=null){run.setOrder_ID((Integer) objarr[0]);}

@@ -9,11 +9,12 @@ import java.util.Date;
 public class Run_Value {
     @Id
     private String runId;
-    private int Order_ID;
+    private Integer Order_ID;
     private String producer_name;
     private Date departure_date;
     private Date arrival_date;
     private String Ship_name;
+    private String Run_status ="In-Progress";
 
 
     @Override
@@ -25,6 +26,7 @@ public class Run_Value {
                 ", departure_date=" + departure_date +
                 ", arrival_date=" + arrival_date +
                 ", Ship_name='" + Ship_name + '\'' +
+                ", Run_status='" + Run_status + '\'' +
                 '}';
     }
 
@@ -34,7 +36,7 @@ public class Run_Value {
         if(runId!=null){
             sb.append(" AND runId='"+runId+"'");
         }
-        if(Order_ID!=0){
+        if(Order_ID!=null){
             sb.append(" AND Order_ID="+Order_ID);
         }
         if(producer_name!=null){
@@ -49,11 +51,21 @@ public class Run_Value {
         if(Ship_name!=null){
             sb.append(" AND Ship_name='"+Ship_name+"'");
         }
+
 return sb.toString();
 
 
 
 
+    }
+
+    public String getRun_status() {
+        return Run_status;
+    }
+
+    public Run_Value setRun_status(String run_status) {
+        Run_status = run_status;
+        return this;
     }
 
     public String getRunId() {
@@ -65,11 +77,11 @@ return sb.toString();
         return this;
     }
 
-    public int getOrder_ID() {
+    public Integer getOrder_ID() {
         return Order_ID;
     }
 
-    public Run_Value setOrder_ID(int order_ID) {
+    public Run_Value setOrder_ID(Integer order_ID) {
         Order_ID = order_ID;
         return this;
     }

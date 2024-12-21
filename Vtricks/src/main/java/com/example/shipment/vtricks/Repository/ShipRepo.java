@@ -23,7 +23,7 @@ public interface ShipRepo extends JpaRepository<Ship,Long> {
     //    @Query("select ALL from Shipment_Data LIMIT <5>")
 
     //    @Query("select ALL from Shipment_Data LIMIT <5>")
-    @Query(value = "select b from Ship b where b.arrival_date < ?1")
+    @Query(value = "select b from Ship b where b.Order_ID>10")
     public List<Ship> findShipsByArrival_date(Date curdate);
 
 @Query(value = "select * from shipment_data :str2",nativeQuery = true)
