@@ -15,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.scheduling.annotation.Schedules;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.*;
 //import java.util.concurrent.CompletableFuture;
@@ -63,15 +65,32 @@ Logger logger= LoggerFactory.getLogger("ShipServiceImpl.class");
         System.out.println("ShipService call "+runner);
         return runner;
     }
-    public List<Ship> getShipmentByFilters(String str){
+    public List<Ship> getShipmentByFilters(String str) throws Exception {
         String qry="select k from Ship k where "+str;
         System.out.println("Query = "+qry);
         Query query = entityManager.createQuery(qry, Ship.class);
+        Thread.sleep(10000);
 //        List<Ship> result=repo.getdata(str);
 //        query.setParameter("ask",str);
 //        System.out.println("query written = "+query);
 //        System.out.println("Service call  "+str);
+        List<Ship> result= query.getResultList();
+        if(result.isEmpty()){
+            throw new Exception("Result is empty");
+
+        }
         return query.getResultList();
+    }
+
+
+    public void updateRunStatus(String runId,String status)  {
+//        String runIdstatus=runId+"and"+status;
+//        try {
+//            runFeign.UpdateStatus(runId,status);
+//        }catch(Exception e){
+//            logger.info(e.getLocalizedMessage());
+//        }
+        runFeign.UpdateStatus(runId,status);
     }
 
 
@@ -91,7 +110,9 @@ Logger logger= LoggerFactory.getLogger("ShipServiceImpl.class");
     }
 
 
-//    @Scheduled(fixedRate = 6000)
+//    @Scheduled(fixedRate = 6000)  // runs every 6 seconds
+//@Scheduled(cron = "*/4 * * * * *") // runs every 4 seconds format (sec,min,hr,day,month,year)
+//    @Scheduled(fixedDelay = 400l)  //runs every 4 seconds
 @Async("Get_Shipments_Bean")
     public void RecurringNewShipment(){
         Ship ship=new Ship();

@@ -7,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -32,11 +35,15 @@ public class ShipmentController {
 //        System.out.println("get status by run ID "+InputQuery);
         System.out.println("Global Run ID created = "+dyn.getDynamicRunID());
         System.out.println("Global Run Query generated = "+dyn.getDynamicquery());
+        List<Ship> result=new ArrayList<>();
+try {
+ result = service.getShipmentByFilters(dyn.getDynamicquery());
+// Thread.sleep(4000);
+    service.updateRunStatus(dyn.getDynamicRunID(),"completed");
+}catch(Exception e){
+service.updateRunStatus(dyn.getDynamicRunID(),"Failure");
+}
 
-        List<Ship> result=service.getShipmentByFilters(dyn.getDynamicquery());
-
-
-//        List<Ship> result=service.getAllShipments();
 
         System.out.println("in bound");
         return new ResponseEntity<>(result,HttpStatus.OK);

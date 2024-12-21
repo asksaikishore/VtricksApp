@@ -5,9 +5,7 @@ import feign.QueryMap;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 @FeignClient(name="Run-app",url = "http://localhost:8082")
 public interface Run_Feign {
@@ -17,7 +15,8 @@ public interface Run_Feign {
 
     @GetMapping("/run/{id}")
     Run_Value getRunById(@PathVariable(value = "id") String Id);
-
+    @PostMapping("/run/updatestatus/{runid}")
+     void UpdateStatus(@PathVariable(value = "runid") String runId,@RequestParam(value = "status") String status);
 
 
 }
