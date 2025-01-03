@@ -1,11 +1,15 @@
 package com.example.shipment.vtricks.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Array;
 
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.concurrent.CompletableFuture;
+import java.util.List;
 
 @Entity
 @Table(name = "Shipment_Data")
@@ -14,13 +18,23 @@ public class Ship {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Long id;
+    @Column
     private int Order_ID;
+    @Column
     private String producer_name;
-    private Date departure_date;
-    private Date arrival_date;
+    @Column
+    private LocalDate departure_date;
+    @Column
+    private LocalDate arrival_date;
+    @Column
     private String Ship_name;
+    @Column
     private int Bulk_count;
+
+
+
 
     @Override
     public String toString() {
@@ -33,6 +47,33 @@ public class Ship {
                 ", Ship_name='" + Ship_name + '\'' +
                 ", Bulk_count=" + Bulk_count +
                 '}';
+    }
+
+    @JsonIgnore
+    public String[] values(){
+        List<String> list=new ArrayList<>();
+        if(id!=null){
+            list.add(String.valueOf(id));
+        }
+        if(Order_ID!=0){
+            list.add(String.valueOf(Order_ID));
+        }
+        if(producer_name!=null){
+            list.add(producer_name);
+
+        }
+        if(departure_date!=null){
+            list.add(String.valueOf(departure_date));
+        }
+        if(arrival_date!=null){
+            list.add(String.valueOf(arrival_date));
+        }
+        if(Ship_name!=null){
+            list.add(Ship_name);
+
+        }
+
+        return list.toArray(String[]::new);
     }
 
     public Long getId() {
@@ -62,21 +103,21 @@ public class Ship {
         return this;
     }
 
-    public Date getDeparture_date() {
+    public LocalDate getDeparture_date() {
         return departure_date;
     }
 
-    public Ship setDeparture_date(Date departure_date) {
+    public Ship setDeparture_date(LocalDate departure_date) {
         this.departure_date = departure_date;
         return this;
     }
 
-    public Date getArrival_date() {
+    public LocalDate getArrival_date() {
         return arrival_date;
     }
 
-    public Ship setArrival_date(Date arrival_date) {
-        this.arrival_date = arrival_date;
+    public Ship setArrival_date(LocalDate arrival_date) {
+        this.arrival_date =arrival_date;
         return this;
     }
 
@@ -96,5 +137,31 @@ public class Ship {
     public Ship setBulk_count(int bulk_count) {
         Bulk_count = bulk_count;
         return this;
+    }
+    @JsonIgnore
+    public String[] getHeaders(){
+        List<String> list=new ArrayList<>();
+        if(id!=null){
+            list.add("runId");
+        }
+        if(Order_ID!=0){
+            list.add("Order_ID");
+        }
+        if(producer_name!=null){
+            list.add("producer_name");
+
+        }
+        if(departure_date!=null){
+            list.add("departure_date");
+        }
+        if(arrival_date!=null){
+            list.add("arrival_date");
+        }
+        if(Ship_name!=null){
+            list.add("Ship_name");
+
+        }
+
+        return list.toArray(String[]::new);
     }
 }

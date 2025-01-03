@@ -1,14 +1,20 @@
 package com.example.shipment.vtricks.controller;
 import com.example.shipment.vtricks.Service.ShipServiceImpl;
 import com.example.shipment.vtricks.config.DynamicRunValue;
+import com.example.shipment.vtricks.entity.Run_Value;
 import com.example.shipment.vtricks.entity.Ship;
+import com.opencsv.CSVWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,6 +57,34 @@ service.updateRunStatus(dyn.getDynamicRunID(),"Failure");
 
     }
 
+    @GetMapping("/csv")
+        public ResponseEntity<byte[]> generateCsv() throws IOException,Exception {
+            // Sample data to write in CSV
+        List<Ship> result = service.getAllShipments();
+            List<String[]> csvData = new ArrayList<>();
+//        String run_ID=service.createnewRun(new Run_Value());
+        String filename="RunId_"+dyn.getDynamicRunID()+"_"+".csv";
+            csvData.add(result.get(0).getHeaders());
+            for(Ship ship:result){
+                csvData.add(ship.values());
+            }
+
+            // Write data to ByteArrayOutputStream to send as CSV response
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            try (CSVWriter csvWriter = new CSVWriter(new OutputStreamWriter(byteArrayOutputStream))) {
+                csvWriter.writeAll(csvData); // Write all the data at once
+            }
+
+
+            // Prepare response headers for a CSV download
+            HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Content-Disposition", "attachment; filename="+filename);
+        httpHeaders.add("Content-Type", "text/csv");
+
+            return new ResponseEntity<>(byteArrayOutputStream.toByteArray(),httpHeaders, HttpStatus.OK);
+
+    }
+
     @GetMapping("/all/Arrival")
     public ResponseEntity<List<Ship>> getAllShipmentsBydate(@RequestParam String ArrivalDate ){
         Date d=new Date(ArrivalDate);
@@ -90,6 +124,10 @@ service.updateRunStatus(dyn.getDynamicRunID(),"Failure");
     public ResponseEntity<List<Ship>> getSample(){
 
         return ResponseEntity.ok(service.getSample());
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Ship> updateShip(@PathVariable(value = "id") Long id,@RequestBody Ship ship){
+        return ResponseEntity.ok(service.updateRecord(id,ship));
     }
 
 

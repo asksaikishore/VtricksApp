@@ -7,7 +7,7 @@ import java.util.List;
 public interface ShipService {
 
 
-     List<Ship> getAllShipments() ;
+     List<Ship> getAllShipments() throws Exception;
      Ship getShipmentsById(Long id);
 
      void CreateShipment(Ship ship);

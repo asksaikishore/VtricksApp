@@ -14,6 +14,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.scheduling.annotation.Async;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.annotation.Schedules;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.time.LocalDate;
 import java.util.*;
 //import java.util.concurrent.CompletableFuture;
 
@@ -40,12 +43,12 @@ Logger logger= LoggerFactory.getLogger("ShipServiceImpl.class");
     @Override
     public Ship getShipmentsById(Long id) {
         Optional<Ship> result=repo.findById(id);
-
-        return result.isPresent() ? new Ship():result.get();
+        System.out.println(result.get());
+        return result.orElse(new Ship());
     }
 
     @Override
-    public List<Ship> getAllShipments() {
+    public List<Ship> getAllShipments() throws Exception {
         List<Ship> shiplist= repo.findAll();
         long starttime=System.currentTimeMillis();
 //        Thread.sleep(6000);
@@ -54,6 +57,12 @@ Logger logger= LoggerFactory.getLogger("ShipServiceImpl.class");
 //            throw new IOException("input is empty");
 //        }
         System.out.println("call complete in  "+(System.currentTimeMillis()-starttime));
+        if(!shiplist.isEmpty()){
+            updateRunStatus(dyn.getDynamicRunID(),"completed");
+        }else{
+            updateRunStatus(dyn.getDynamicRunID(),"failure");
+            throw new Exception();
+        }
         return shiplist;
     }
 //    @Async("Get_Shipments_Bean")
@@ -70,11 +79,13 @@ Logger logger= LoggerFactory.getLogger("ShipServiceImpl.class");
         return runner;
     }
     @Transactional
+//    @Cacheable(value = "getshipmentFilters",key = "#str")
     public List<Ship> getShipmentByFilters(String str) throws Exception {
-        String qry="select k from Ship k where "+str;
+        // instead use prepared statement here
+        String qry=str;
         System.out.println("Query = "+qry);
         Query query = entityManager.createQuery(qry, Ship.class);
-        Thread.sleep(4000);
+//        Thread.sleep(4000);
 //        List<Ship> result=repo.getdata(str);
 //        query.setParameter("ask",str);
 //        System.out.println("query written = "+query);
@@ -82,7 +93,7 @@ Logger logger= LoggerFactory.getLogger("ShipServiceImpl.class");
         List<Ship> result= query.getResultList();
         updateRunStatus(dyn.getDynamicRunID(),"completed");
         String testing=createnewRun(new Run_Value().setShip_name("Sai kishore"));
-        Thread.sleep(4000);
+//        Thread.sleep(4000);
         if(result.isEmpty()){
             rollBackRun(testing);
             throw new Exception("Result is empty");
@@ -135,8 +146,8 @@ Logger logger= LoggerFactory.getLogger("ShipServiceImpl.class");
         ship.setOrder_ID(temp);
 
 
-    ship.setDeparture_date(Calendar.getInstance(TimeZone.getDefault()).getTime());
-        ship.setArrival_date(new Date(2025-1900,temp%12,temp%30));
+    ship.setDeparture_date(LocalDate.now());
+        ship.setArrival_date(LocalDate.of(2026,temp%12,temp%30));
         logger.info("Arrival  Date = "+ship.getArrival_date());
         repo.save(ship);
 
@@ -153,5 +164,14 @@ logger.info(" records removed:{}","deleted all the records");
         throw new RuntimeException(e);
     }
     repo.deleteAll();
+    }
+
+    public Ship updateRecord(Long id,Ship sh) {
+        Ship ship=getShipmentsById(id);
+//        repo.deleteById(id);
+        sh.setId(id);
+
+
+        return repo.save(sh);
     }
 }

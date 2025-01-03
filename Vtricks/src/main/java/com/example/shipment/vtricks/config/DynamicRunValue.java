@@ -8,6 +8,16 @@ import org.springframework.stereotype.Component;
 public class DynamicRunValue {
     private String dynamicValue;
     private String Dynamicquery;
+
+    public String[] getDynamicHeaders() {
+        return dynamicHeaders;
+    }
+    @Synchronized
+    public void setDynamicHeaders(String[] dynamicHeaders) {
+        this.dynamicHeaders = dynamicHeaders;
+    }
+
+    private String[] dynamicHeaders;
     @Synchronized
     public void setDynamicRunId(String str){
         this.dynamicValue=str;

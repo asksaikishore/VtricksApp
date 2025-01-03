@@ -4,7 +4,9 @@ package com.example.shipment.vtricks.entity;
 
 import org.springframework.data.annotation.Id;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class Run_Value {
     @Id
@@ -15,6 +17,7 @@ public class Run_Value {
     private Date arrival_date;
     private String Ship_name;
     private String Run_status ="In-Progress";
+
 
 
     @Override
@@ -32,6 +35,7 @@ public class Run_Value {
 
     public String getArgs(){
         StringBuilder sb=new StringBuilder();
+        sb.append("select k from Ship k where ");
         sb.append("1=1");
         if(runId!=null){
             sb.append(" AND runId='"+runId+"'");
@@ -57,6 +61,57 @@ return sb.toString();
 
 
 
+    }
+
+    public String[] values(){
+        List<String> list=new ArrayList<>();
+        if(runId!=null){
+            list.add(runId);
+        }
+        if(Order_ID!=null){
+            list.add(String.valueOf(Order_ID));
+        }
+        if(producer_name!=null){
+            list.add(producer_name);
+
+        }
+        if(departure_date!=null){
+            list.add(String.valueOf(departure_date));
+        }
+        if(arrival_date!=null){
+            list.add(String.valueOf(arrival_date));
+        }
+        if(Ship_name!=null){
+            list.add(Ship_name);
+
+        }
+
+        return list.toArray(String[]::new);
+    }
+    public String[] getHeaders(){
+        List<String> list=new ArrayList<>();
+        if(runId!=null){
+            list.add("runId");
+        }
+        if(Order_ID!=null){
+            list.add("Order_ID");
+        }
+        if(producer_name!=null){
+            list.add("producer_name");
+
+        }
+        if(departure_date!=null){
+            list.add("departure_date");
+        }
+        if(arrival_date!=null){
+            list.add("arrival_date");
+        }
+        if(Ship_name!=null){
+            list.add("Ship_name");
+
+        }
+
+        return list.toArray(String[]::new);
     }
 
     public String getRun_status() {
